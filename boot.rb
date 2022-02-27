@@ -3,7 +3,7 @@ require 'bundler'
 Bundler.setup
 Bundler.require :default, ENV.fetch("APP_ENV")
 
-%W(lib config services routes concepts).each do |d|
+%W(lib config services concepts routes).each do |d|
   require_all Dir.glob("#{d}/**/*.rb")
 end
 

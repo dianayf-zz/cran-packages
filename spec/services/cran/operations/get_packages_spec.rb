@@ -1,18 +1,22 @@
 RSpec.describe Cran::GetPackages do
-  let(:operation) { described_class.new() }
+
+  let(:zip_reader) {double("Zlib::GzipReader")}
+  let(:zip_reader_instance) {instance_double("Zlib::GzipReader")}
+  let(:operation) { described_class.new(zip_reader: zip_reader) }
+  let(:success_body) {Zlib::GzipWriter.new(StringIO.new("lala")).close.string}
+  let(:success_response) {{body: success_body, status: 200}}
+  let(:url_request) { URI(Cran::RequestUrls::LIST)}
 
   describe "#call" do
     it "retuns R packages" do
-      expect(external_request_repo).to receive(:validate_and_create)
-        .and_return(external_request)
+      allow(zip_reader).to receive(:new) {zip_reader_instance} 
+      allow(zip_reader_instance).to receive(:read) {success_body}
+      stub_request(:get, url_request).
+        to_return(success_response)
+
       result = operation.call
-      expect(result.value).to eq(
-      {
-        package_name: '00Archive', 
-        version:  '1.0`', 
-        r_dependency:  "v 1.3", 
-        dependencies:  'blabal'
-      })
+      expect(result).to be_instance_of(Dry::Monads::Success)
+      expect(result.value![0]).to include(:package_name, :version, :r_dependency, :dependencies)
     end
 
     it "returns Failure when R package can not be getting" do
