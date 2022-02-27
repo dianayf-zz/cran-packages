@@ -1,6 +1,5 @@
-require 'active_support/core_ext/hash/keys'
 module Cran
-  class GetPackages < Operation
+  class GetPackageInfo < Operation
     def initialize(
       http_request_service: Net::HTTP,
       zip_reader: Zlib::GzipReader,
@@ -17,7 +16,8 @@ module Cran
 
     def request_packages(input)
       begin
-        uri = URI("#{Cran::BASE_URL}#{Cran::RequestUrls::LIST}")
+        #http://cran.r-project.org/src/contrib/PKGNAME_PKGVERSION.tar.gz
+        uri = URI("#{Cran::BASE_URL}#{package_name}_#{package_version}.tar.gz")
         result = @http_request_service.start(uri.host, uri.port) do |http|
           req = Net::HTTP::Get.new(uri)
           http.request(req)
@@ -50,14 +50,8 @@ module Cran
       control = @debian_control_file_parser.read(input.fetch(:destination_file))
       control.paragraphs.map do |paragrah|
         symbolize_keys = paragrah.deep_symbolize_keys
-        dependencies = symbolize_keys.fetch(:Depends, " ")
-        clean_dependencies = dependencies.split(",")
 
         {
-          package_name: symbolize_keys[:Package],
-          version: symbolize_keys[:Version],
-          r_dependency: clean_dependencies[0],
-          dependencies:  clean_dependencies[1...].map(&:strip)
         }
       end
     end
