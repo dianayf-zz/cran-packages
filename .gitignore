@@ -1,0 +1,8 @@
+.env
+.ruby-version
+.DS_Store
+.env.*
+tmp
+log
+*.swp
+*.swo

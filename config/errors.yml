@@ -1,0 +1,64 @@
+en:
+  errors:
+es:
+  errors:
+    # Default messages for Dry::Validation
+    array?: "Debe ser tipo array"
+    empty?: "Debe estar vacío"
+    excludes?: "No debe incluir %{value}"
+    excluded_from?:
+      arg:
+        default: "No debe ser uno de estos: %{list}"
+        range: "No debe estar entre: %{list_left} - %{list_right}"
+    exclusion?: "No debe ser uno de: %{list}"
+    eql?: "Debe ser igual a %{left}"
+    not_eql?: "No debe ser igual a %{left}"
+    filled?: "Debe ser completado"
+    format?: "Formato inválido"
+    number?: "Debe ser un número"
+    odd?: "Debe ser impar"
+    even?: "Debe ser par"
+    gt?: "Debe ser mayor a %{num}"
+    gteq?: "Debe ser mayor o igual a %{num}"
+    hash?: "Debe ser tipo hash"
+    included_in?:
+      arg:
+        default: "Debe ser uno de estos: %{list}"
+        range: "Debe estar entre: %{list_left} - %{list_right}"
+    inclusion?: "Debe ser uno de estos: %{list}"
+    includes?: "Debe incluir %{value}"
+    bool?: "Debe ser boolean"
+    true?: "Debe ser true"
+    false?: "Debe ser false"
+    int?: "Debe ser tipo integer"
+    float?: "Debe ser tipo float"
+    decimal?: "Debe ser tipo decimal"
+    date?: "Debe ser tipo date"
+    date_time?: "Debe ser tipo date time"
+    time?: "Debe ser tipo time"
+    key?: "No está presente"
+    attr?: "No está presente"
+    lt?: "Debe ser menor a %{num}"
+    lteq?: "Debe ser menor o igual a %{num}"
+    max_size?: "El tamaño no puede ser mayor que %{num}"
+    max_bytesize?: "Bytesize no puede ser mayor que %{num}"
+    min_size?: "El tamaño no puede ser menor que %{num}"
+    min_bytesize?: "Bytesize no puede ser menor que %{num}"
+    nil?: "Debe ser tipo nil"
+    str?: "Debe ser tipo string"
+    type?: "Debe ser tipo %{type}"
+    size?:
+      arg:
+        default: "El tamaño debe ser %{size}"
+        range: "El tamaño debe estar dentro del rango: %{size_left} - %{size_right}"
+      value:
+        string:
+          arg:
+            default: "La longitud debe ser de %{size}"
+            range: "La longitud debe estar dentro del rango: %{size_left} - %{size_right}"
+    bytesize?:
+      arg:
+        default: "Debe tener %{size} bytes de longitud"
+        range: "Debe tener una longitud de %{size_left} - %{size_right} bytes"
+    not:
+      empty?: "No puede estar vacío"
