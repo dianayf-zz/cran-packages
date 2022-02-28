@@ -14,6 +14,7 @@ gem 'dry-struct'
 gem 'dry-initializer'
 gem 'deb_control', '~> 0.0.1'
 gem "faraday", "~> 0.15.2"
+gem 'minitar'
 gem 'net-http'
 gem 'require_all', '~> 1.4'
 gem 'syro', '~> 3.2.1'

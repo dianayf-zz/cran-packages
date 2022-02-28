@@ -57,7 +57,8 @@ module Cran
           package_name: symbolize_keys[:Package],
           version: symbolize_keys[:Version],
           r_dependency: clean_dependencies[0],
-          dependencies:  clean_dependencies[1...].map(&:strip)
+          dependencies:  clean_dependencies[1...].map(&:strip),
+          license: symbolize_keys[:License]
         }
       end
     end

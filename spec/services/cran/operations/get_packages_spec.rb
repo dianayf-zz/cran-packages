@@ -17,7 +17,7 @@ RSpec.describe Cran::GetPackages do
 
       result = operation.call
       expect(result).to be_instance_of(Dry::Monads::Success)
-      expect(result.value![0]).to include(:package_name, :version, :r_dependency, :dependencies)
+      expect(result.value![0]).to include(:package_name, :version, :r_dependency, :dependencies, :licencse)
     end
 
     it "returns Failure when R package can not be getting" do

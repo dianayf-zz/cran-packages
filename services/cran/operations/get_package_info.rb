@@ -1,34 +1,40 @@
 module Cran
   class GetPackageInfo < Operation
     def initialize(
+      debian_control_file_parser: DebControl::ControlFileBase,
       http_request_service: Net::HTTP,
-      zip_reader: Zlib::GzipReader,
-      debian_control_file_parser: DebControl::ControlFileBase
+      mini_tar_reader: Minitar::Reader,
+      zip_reader: Zlib::GzipReader
       ) 
+      @debian_control_file_parser = debian_control_file_parser
       @http_request_service = http_request_service
       @zip_reader = zip_reader
-      @debian_control_file_parser = debian_control_file_parser
+      @mini_tar_reader = mini_tar_reader
       super
     end
 
-    step :request_packages
+    step :request_package
     map :decompress_response
 
-    def request_packages(input)
+    def request_package(input)
+      name = input.fetch(:name)
+      version = input.fetch(:version)
       begin
-        #http://cran.r-project.org/src/contrib/PKGNAME_PKGVERSION.tar.gz
-        uri = URI("#{Cran::BASE_URL}#{package_name}_#{package_version}.tar.gz")
+        #https://cran.r-project.org/src/contrib/A3_1.0.0.tar.gz
+        uri = URI("#{Cran::BASE_URL}/#{name}_#{version}.tar.gz")
         result = @http_request_service.start(uri.host, uri.port) do |http|
           req = Net::HTTP::Get.new(uri)
           http.request(req)
         end
-      
-        sio = StringIO.new( result.body )
-        gz = @zip_reader.new(sio)
 
-        destination_file = File.join("services/resources", "packages_#{Time.now.strftime('%y%m%d')}")
-        destination_directory = File.dirname(destination_file)
-        File.open(destination_file, "wb") {|f| f.print gz.read}
+       destination_file = File.join("services/resources", "package_#{name}_#{version}_#{Time.now.strftime('%y%m%d')}")
+       destination_directory = File.dirname(destination_file)
+      
+       sio = StringIO.new( result.body )
+       tgz = @zip_reader.new(sio)
+       reader = @mini_tar_reader.new(tgz)
+       reader.rewind
+       reader.each_entry{|e| File.open(destination_file, "wb") {|f| f.print e.read} if e.full_name == "#{name}/DESCRIPTION"}
 
         Success(
           {
@@ -48,12 +54,14 @@ module Cran
 
     def decompress_response(input)
       control = @debian_control_file_parser.read(input.fetch(:destination_file))
-      control.paragraphs.map do |paragrah|
-        symbolize_keys = paragrah.deep_symbolize_keys
-
+      content = control.paragraphs[0]
+      symbolize_keys = content.deep_symbolize_keys
         {
+          title: symbolize_keys.fetch(:Title),
+          authors: symbolize_keys.fetch(:Author),
+          maintainers: symbolize_keys[:Maintainer] || symbolize_keys[:Maintainers],
+          publication_date: symbolize_keys.fetch(:"Date/Publication")
         }
-      end
     end
 
   end
