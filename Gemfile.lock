@@ -14,6 +14,7 @@ GEM
     concurrent-ruby (1.1.9)
     crack (0.4.5)
       rexml
+    deb_control (0.0.1)
     diff-lcs (1.4.4)
     dotenv (2.7.6)
     dry-configurable (0.13.0)
@@ -67,12 +68,23 @@ GEM
       dry-schema (~> 1.8, >= 1.8.0)
     factory_bot (4.11.1)
       activesupport (>= 3.0.0)
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
     hashdiff (1.0.1)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    io-wait (0.2.1)
     method_source (1.0.0)
+    minitar (0.9)
     minitest (5.14.4)
+    multipart-post (2.1.1)
+    net-http (0.2.0)
+      net-protocol
+      uri
+    net-protocol (0.1.2)
+      io-wait
+      timeout
     nio4r (2.5.8)
     oj (3.13.8)
     pg (1.2.3)
@@ -115,9 +127,11 @@ GEM
     syro (3.2.1)
       rack (>= 1.6.0)
       seg
+    timeout (0.2.0)
     transproc (1.1.1)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
+    uri (0.11.0)
     webmock (3.14.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -130,6 +144,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (>= 3.1)
   bigdecimal (= 1.4.2)
+  deb_control (~> 0.0.1)
   dotenv
   dry-initializer
   dry-monads
@@ -138,7 +153,10 @@ DEPENDENCIES
   dry-types
   dry-validation
   factory_bot (~> 4.0)
+  faraday (~> 0.15.2)
   i18n (~> 1.8.10)
+  minitar
+  net-http
   oj (~> 3.0, >= 3.0.3)
   pg (~> 1.2.3)
   pry

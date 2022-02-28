@@ -13,7 +13,6 @@
   ```
       DATABASE_URL=postgres://localhost:5432/cran_packages_dev
       APP_ENV=dev
-      DEFAULT_LOCALE=en
   ```
   5. Create database cran_packages_dev
      
