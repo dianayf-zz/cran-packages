@@ -54,7 +54,7 @@ module Cran
         clean_dependencies = dependencies.split(",")
 
         {
-          package_name: symbolize_keys[:Package],
+          name: symbolize_keys[:Package],
           version: symbolize_keys[:Version],
           r_dependency: clean_dependencies[0],
           dependencies:  clean_dependencies[1...].map(&:strip),
