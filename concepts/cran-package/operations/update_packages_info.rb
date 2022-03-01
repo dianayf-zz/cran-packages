@@ -1,4 +1,4 @@
-module CranPackage
+module CranPackages
   class UpdatePackagesInfo < Operation
     def initialize(
       get_packages_operation: Cran::GetPackages.new,
@@ -34,6 +34,7 @@ module CranPackage
              })
            }) 
            .or{raise "package information can not updated"}
+      end
     end
 
   end
