@@ -14,7 +14,7 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require_relative "../boot.rb"
-#require 'webmock/rspec'
+require 'webmock/rspec'
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 

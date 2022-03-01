@@ -1,8 +1,8 @@
-RSpec.describe CranPackage::UpdatePackagesInfo do
-  let(:package) { build(:crain_package) }
+RSpec.describe CranPackages::GetPackages do
+  let(:first_package) { build(:cran_package, name: "package 1") }
+  let(:second_package) { build(:cran_package, name: "package 2") }
   let(:get_packages_operation) {instance_double("Cran::GetPackages")}
-  let(:get_package_info) {instance_double("Cran::GetPackageInfo")}
-  let(:package_repository) {instance_double("CranPackageRepository")}
+  let(:find_or_create_package) {instance_double("CranPackages::FindOrCreatePackage")}
   let(:packages_list) do
     [
       {
@@ -43,18 +43,16 @@ RSpec.describe CranPackage::UpdatePackagesInfo do
   let(:operation) do
     described_class.new(
       get_packages_operation: get_packages_operation,
-      get_package_info: get_package_info,
-      package_repository: package_repository
+      find_or_create_package: find_or_create_package
     )
-  }
+  end
   
 
   describe "#call" do
-    it "update R package info successfully" do
+    it "Get all available R packages and persist information" do
       allow(get_packages_operation).to receive(:call) {Dry::Monads::Success(packages_list)}
-      allow(get_package_info_operation).to receive(:call).with(name: packages_list[0][:name], version:  packages_list[0][:version]) {Dry::Monads::Success(first_package_info)}
-      allow(get_package_info_operation).to receive(:call).with(name: packages_list[1][:name], version:  packages_list[1][:version]) {Dry::Monads::Success(second_package_info)}
-      allow(package_repository).to receive(:find_or_create) {Dry::Some.new(crain_package)}
+      allow(find_or_create_package).to receive(:call).with(name: packages_list[0][:name], version:  packages_list[0][:version]) {Dry::Monads::Success(first_package)}
+      allow(find_or_create_package).to receive(:call).with(name: packages_list[1][:name], version:  packages_list[1][:version]) {Dry::Monads::Success(second_package)}
 
       result = operation.call
       value = result.value!
@@ -62,9 +60,9 @@ RSpec.describe CranPackage::UpdatePackagesInfo do
       expect(result).to be_instance_of(Dry::Monads::Success)
     end
 
-    it "returns Failure when R package info can not be updated" do
-      result = operation.call
-      expect(result).to be_instance_of(Dry::Monads::Failure)
+    it "raise an error when R packages can not be retrieved" do
+      allow(get_packages_operation).to receive(:call) {Dry::Monads::Failure()}
+      expect{operation.call}.to raise_error("packages can not retrieved")
     end
   end
 end
