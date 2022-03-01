@@ -58,8 +58,8 @@ module Cran
       symbolize_keys = content.deep_symbolize_keys
         {
           title: symbolize_keys.fetch(:Title),
-          authors: symbolize_keys.fetch(:Author),
-          maintainers: symbolize_keys[:Maintainer] || symbolize_keys[:Maintainers],
+          authors: symbolize_keys.fetch(:Author).split("(").reject{|o| o.include?("http")},
+          maintainers: symbolize_keys[:Maintainer],
           publication_date: symbolize_keys.fetch(:"Date/Publication")
         }
     end

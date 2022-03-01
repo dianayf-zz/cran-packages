@@ -52,12 +52,14 @@ module Cran
         symbolize_keys = paragrah.deep_symbolize_keys
         dependencies = symbolize_keys.fetch(:Depends, " ")
         clean_dependencies = dependencies.split(",")
+        dependencies =  clean_dependencies[1...].map(&:strip),
+        imports = symbolize_keys[:Imports].split(",") || []
 
         {
           name: symbolize_keys[:Package],
           version: symbolize_keys[:Version],
           r_dependency: clean_dependencies[0],
-          dependencies:  clean_dependencies[1...].map(&:strip),
+          dependencies: imports,
           license: symbolize_keys[:License]
         }
       end
