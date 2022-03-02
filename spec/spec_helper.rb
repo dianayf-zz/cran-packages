@@ -15,13 +15,25 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require_relative "../boot.rb"
 #require 'webmock/rspec'
+module SpecHelpers
+  def clear_db_tables
+    existing_tables = Sequel::Model.db.tables
+    tables_to_preserve = [:schema_info, :schema_migrations, :que_jobs]
+    tables_to_be_emptied = existing_tables - tables_to_preserve
+    tables_to_be_emptied.sort.reverse.each { |table| Sequel::Model.db[table].truncate(cascade: true) }
+  end
+end
+
 RSpec.configure do |config|
+  Sequel::Model.strict_param_setting = false
   config.include FactoryBot::Syntax::Methods
+  CranPackagesDependency.strict_param_setting = false
+  CranPackagesContributor.strict_param_setting = false
 
   config.before(:suite) do
     FactoryBot.find_definitions
   end
-
+  config.include SpecHelpers
   config.before(:each) do
     existing_tables = Sequel::Model.db.tables
     tables_to_preserve = [:schema_info, :schema_migrations]
@@ -57,6 +69,7 @@ RSpec.configure do |config|
   # inherited by the metadata hash of host groups and examples, rather than
   # triggering implicit auto-inclusion in groups with matching metadata.
   config.shared_context_metadata_behavior = :apply_to_host_groups
+
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
