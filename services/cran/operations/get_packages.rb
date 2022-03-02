@@ -13,7 +13,7 @@ module Cran
     end
 
     step :request_packages
-    map :decompress_response
+    map :parse_and_transform_response
 
     def request_packages(input)
       begin
@@ -23,12 +23,10 @@ module Cran
           http.request(req)
         end
       
-        sio = StringIO.new( result.body )
-        gz = @zip_reader.new(sio)
-
         destination_file = File.join("services/resources", "packages_#{Time.now.strftime('%y%m%d')}")
         destination_directory = File.dirname(destination_file)
-        File.open(destination_file, "wb") {|f| f.print gz.read}
+
+        decompress_and_save_file(body: result.body, destination_file: destination_file)
 
         Success(
           {
@@ -36,34 +34,38 @@ module Cran
             destination_file: destination_file
           }
         )
-      rescue => e
+      rescue *API::Wrapper::NET_HTTP_EXCEPTIONS => error
         Failure(
           {
-            status_code: e.code,
+            status_code: error.code || error,
             destination_file: nil
           }
         )
       end
     end
 
-    def decompress_response(input)
+    def parse_and_transform_response(input)
       control = @debian_control_file_parser.read(input.fetch(:destination_file))
       control.paragraphs.map do |paragrah|
         symbolize_keys = paragrah.deep_symbolize_keys
         dependencies = symbolize_keys.fetch(:Depends, " ")
         clean_dependencies = dependencies.split(",")
-        dependencies =  clean_dependencies[1...].map(&:strip),
-        imports = symbolize_keys[:Imports].split(",") || []
+        imports = symbolize_keys.fetch(:Imports, "")
 
         {
           name: symbolize_keys[:Package],
           version: symbolize_keys[:Version],
           r_dependency: clean_dependencies[0],
-          dependencies: imports,
+          dependencies: imports.split(","),
           license: symbolize_keys[:License]
         }
       end
     end
 
+    def decompress_and_save_file(body:, destination_file:)
+      sio = StringIO.new(body)
+      gz = @zip_reader.new(sio)
+      File.open(destination_file, "wb") {|f| f.print gz.read}
+    end
   end
 end

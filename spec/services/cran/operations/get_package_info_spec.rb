@@ -18,12 +18,10 @@ RSpec.describe Cran::GetPackageInfo do
     it "retuns R package info by name and version" do
       allow(zip_reader).to receive(:new) {zip_reader_instance} 
       allow(zip_reader_instance).to receive(:read) {success_body}
-#      allow(mini_tar_reader).to receive(:new) {mini_tar_reader_instance} 
-      #<InstanceDouble(Zlib::GzipReader) (anonymous)> received unexpected message :pos with (no args)
-=begin
+      allow(mini_tar_reader).to receive(:new) {mini_tar_reader_instance} 
+
       stub_request(:get, url_request).
         to_return(success_response)
-=end
 
       result = operation.call(input)
       value = result.value!

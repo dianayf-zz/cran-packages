@@ -2,7 +2,8 @@ RSpec.describe Cran::GetPackages do
 
   let(:zip_reader) {double("Zlib::GzipReader")}
   let(:zip_reader_instance) {instance_double("Zlib::GzipReader")}
-  let(:operation) { described_class.new(zip_reader: zip_reader) }
+  #let(:operation) { described_class.new(zip_reader: zip_reader) }
+  let(:operation) { described_class.new() }
   let(:success_body) {Zlib::GzipWriter.new(StringIO.new("lala")).close.string}
   let(:success_response) {{body: success_body, status: 200}}
   let(:failure_response) {{body: "", status: 404}}

@@ -2,6 +2,22 @@ include Dry::Monads[:result]
 module API
   class Wrapper < Syro::Deck
 
+    NET_HTTP_EXCEPTIONS = [
+      EOFError,
+      Errno::ECONNABORTED,
+      Errno::ECONNREFUSED,
+      Errno::ECONNRESET,
+      Errno::EHOSTUNREACH,
+      Errno::EINVAL,
+      Errno::ENETUNREACH,
+      Net::HTTPBadResponse,
+      Net::HTTPHeaderSyntaxError,
+      Net::ProtocolError,
+      SocketError,
+      Zlib::GzipFile::Error,
+      Timeout::Error
+    ]
+
     HTTPResponses = {
       :ok => { status: 'OK', code: 200},
       :created => { status: 'CREATED', code: 201},
