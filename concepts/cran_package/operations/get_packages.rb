@@ -1,7 +1,7 @@
 module CranPackages
   class GetPackages < Operation
     def initialize(
-      get_packages_operation: Cran::GetPackageInfo.new,
+      get_packages_operation: Cran::GetPackages.new,
       find_or_create_package: CranPackages::FindOrCreatePackage.new
       ) 
       @get_packages_operation = get_packages_operation
@@ -21,11 +21,9 @@ module CranPackages
     end
 
     def find_or_create_packages(input)
-      packages = input.fetch(:packages)
-      details = packages.map do |package|
-        name = package.fetch(:name)
-        version = package.fetch(:version)
-        @find_or_create_package.call(name: name, version: version)
+      packages = input.fetch(:packages)[0..10]
+      packages.map do |package|
+        @find_or_create_package.call(package)
       end
     end
 
