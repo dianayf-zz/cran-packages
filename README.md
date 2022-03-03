@@ -1,5 +1,7 @@
-#Cran Packages
-  Cran packages is a ruby application which collect R packages using the CRAN server, a relational database was used to represent 3 main entities: Cran_packages, Dependencies and Contributors (includes authors and maintainers).
+
+##Cran Packages
+
+Cran packages is a ruby application which collect R packages using the CRAN server, a relational database was used to represent 3 main entities: Cran_packages, Dependencies and Contributors (includes authors and maintainers).
 
 ## 1. Requirements:
     1.  Ruby 2.7.0
