@@ -55,7 +55,7 @@ module Cran
         {
           name: symbolize_keys[:Package],
           version: symbolize_keys[:Version],
-          r_dependency: clean_dependencies[0],
+          r_version_needed: clean_dependencies[0],
           dependencies: imports.split(","),
           license: symbolize_keys[:License]
         }

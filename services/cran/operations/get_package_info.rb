@@ -54,9 +54,9 @@ module Cran
       maintainer = get_maintainer_data(symbolize_keys[:Maintainer])
 
       {
-        title: symbolize_keys.fetch(:Title),
+        title: symbolize_keys.fetch(:Title).gsub("\n", " "),
         authors: get_author_information(data: symbolize_keys, maintainer: maintainer),
-        maintainers: maintainer,
+        maintainers: [maintainer],
         publication_date: symbolize_keys.fetch(:"Date/Publication")
       }
     end
@@ -70,18 +70,18 @@ module Cran
     end
 
     def get_author_information(data:, maintainer:)
-      return maintainer if !data.fetch(:Author).nil?
+      return [maintainer] if !data.fetch(:Author).nil?
       authors = data[:'Authors@R']
       person = authors.split("person")
       person_details = person[1..-1].flat_map{|element| element.split(",").join(",").gsub(/\(|email =|role =| c\(|\)/, "")}
       person_details.map do |element|
         element = o.split(",")
-        {name: body[0..1].join(",").gsub(",",""), email: body[2].strip, role: body[3..-1]}
+        {name: body[0..1].join(",").gsub(",",""), email: body[2].gsub(">"," ").strip, role: body[3..-1]}
       end
     end
 
     def get_maintainer_data(data)
-      name, email = data.split("<").map{|element| element.strip}
+      name, email = data.split("<").map{|element| element.gsub(">", "").strip}
       {name: name, email: email, role: []}
     end
   end
