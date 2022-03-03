@@ -1,3 +1,5 @@
+require_relative '../boot'
+
 require 'rufus-scheduler'
 
 scheduler = Rufus::Scheduler.new
@@ -5,3 +7,5 @@ scheduler = Rufus::Scheduler.new
 scheduler.cron '5 0 * * *' do
   CranPackages::GetPackages.new.call
 end
+
+scheduler.join

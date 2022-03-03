@@ -7,4 +7,4 @@ use Rack::Cors do
   end
 end
 
-run CranPackageAPI
+run CranPackagesAPI

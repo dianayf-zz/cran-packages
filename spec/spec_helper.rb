@@ -14,7 +14,7 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require_relative "../boot.rb"
-#require 'webmock/rspec'
+require 'webmock/rspec'
 module SpecHelpers
   def clear_db_tables
     existing_tables = Sequel::Model.db.tables

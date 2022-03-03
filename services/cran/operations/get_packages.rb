@@ -23,17 +23,7 @@ module Cran
           http.request(req)
         end
       
-        destination_file = File.join("services/resources", "packages_#{Time.now.strftime('%y%m%d')}")
-        destination_directory = File.dirname(destination_file)
-
-        decompress_and_save_file(body: result.body, destination_file: destination_file)
-
-        Success(
-          {
-            status_code: result.code,
-            destination_file: destination_file
-          }
-        )
+        validate_result_code_and_body(result)
       rescue *API::Wrapper::NET_HTTP_EXCEPTIONS => error
         Failure(
           {
@@ -66,6 +56,29 @@ module Cran
       sio = StringIO.new(body)
       gz = @zip_reader.new(sio)
       File.open(destination_file, "wb") {|f| f.print gz.read}
+    end
+
+    def validate_result_code_and_body(result)
+       if result.code.to_i == 200
+        destination_file = File.join("services/resources", "packages_#{Time.now.strftime('%y%m%d')}")
+        destination_directory = File.dirname(destination_file)
+
+        decompress_and_save_file(body: result.body, destination_file: destination_file)
+
+        Success(
+          {
+            status_code: result.code,
+            destination_file: destination_file
+          }
+        )
+       else
+         Failure(
+           {
+             status_code: result.code,
+             destination_file: nil
+           }
+         )
+       end
     end
   end
 end

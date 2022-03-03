@@ -4,7 +4,7 @@ Bundler.setup
 Bundler.require :default, ENV.fetch("APP_ENV")
 
 %W(lib config concepts services routes).each do |d|
-  require_all Dir.glob("#{d}/**/*.rb")
+  require_all Dir.glob("#{d}/**/*.rb").reject { |f| f == "config/schedule.rb" }
 end
 
 CranPackagesAPI = Rack::Builder.new do

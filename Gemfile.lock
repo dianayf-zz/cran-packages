@@ -70,8 +70,6 @@ GEM
       tzinfo
     factory_bot (4.11.1)
       activesupport (>= 3.0.0)
-    faraday (0.15.4)
-      multipart-post (>= 1.2, < 3)
     fugit (1.5.2)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
@@ -83,7 +81,6 @@ GEM
     method_source (1.0.0)
     minitar (0.9)
     minitest (5.14.4)
-    multipart-post (2.1.1)
     net-http (0.2.0)
       net-protocol
       uri
@@ -99,9 +96,6 @@ GEM
     public_suffix (4.0.6)
     puma (5.5.0)
       nio4r (~> 2.0)
-    que (0.14.3)
-    que-testing (0.2.0)
-      que
     raabro (1.4.0)
     rack (2.2.3)
     rack-cors (1.1.1)
@@ -161,15 +155,12 @@ DEPENDENCIES
   dry-types
   dry-validation
   factory_bot (~> 4.0)
-  faraday (~> 0.15.2)
-  i18n (~> 1.8.10)
   minitar
   net-http
   oj (~> 3.0, >= 3.0.3)
   pg (~> 1.2.3)
   pry
   puma
-  que-testing
   rack-cors
   rack-test (~> 0.6.3)
   rake (~> 13.0.6)

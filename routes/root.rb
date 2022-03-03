@@ -5,6 +5,7 @@ module Routers
     end
 
     on "v1" do
+      on ("cran_packages") { run CranPackages::Router }
     end
 
     handle 404 do

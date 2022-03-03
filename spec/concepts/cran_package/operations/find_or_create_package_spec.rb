@@ -87,11 +87,11 @@ RSpec.describe CranPackages::FindOrCreatePackage do
         .with(cran_package_id: package.id, dependency_id: dependency_2.id) {cran_packages_dependency}
       allow(contributor_repository).to receive(:find_or_create) {contributor}
       expect(cran_package_contributor_repository).to receive(:find_or_create)
-        .with(cran_package_id: package.id, contributor_id: contributor.id, role: Dependencies::RoleTypes::AUTHOR)
+        .with(cran_package_id: package.id, contributor_id: contributor.id, role: Contributors::RoleTypes::AUTHOR)
         .once {cran_packages_contributor}
 
       expect(cran_package_contributor_repository).to receive(:find_or_create)
-        .with(cran_package_id: package.id, contributor_id: contributor.id, role: Dependencies::RoleTypes::MAINTAINER)
+        .with(cran_package_id: package.id, contributor_id: contributor.id, role: Contributors::RoleTypes::MAINTAINER)
         .once{cran_packages_contributor}
 
       result = operation.call(input.merge(dependencies: packages_list[0][:dependencies]))

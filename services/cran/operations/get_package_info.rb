@@ -26,17 +26,7 @@ module Cran
           req = Net::HTTP::Get.new(uri)
           http.request(req)
         end
-
-       destination_file = File.join("services/resources", "package_#{name}_#{version}_#{Time.now.strftime('%y%m%d')}")
-       destination_directory = File.dirname(destination_file)
-       decompress_and_save_file(body: result.body, destination_file: destination_file, package_name: name)
-
-        Success(
-          {
-            status_code: result.code,
-            destination_file: destination_file
-          }
-        )
+        validate_result_code_and_body(result: result, name: name, version: version)
       rescue *API::Wrapper::NET_HTTP_EXCEPTIONS => error
         Failure(
           {
@@ -83,6 +73,27 @@ module Cran
     def get_maintainer_data(data)
       name, email = data.split("<").map{|element| element.gsub(">", "").strip}
       {name: name, email: email, role: []}
+    end
+
+    def validate_result_code_and_body(result:, name:, version:)
+       if result.code.to_i == 200
+         destination_file = File.join("services/resources", "package_#{name}_#{version}_#{Time.now.strftime('%y%m%d')}")
+         destination_directory = File.dirname(destination_file)
+         decompress_and_save_file(body: result.body, destination_file: destination_file, package_name: name)
+         Success(
+           {
+             status_code: result.code,
+             destination_file: destination_file
+           }
+         )
+       else
+         Failure(
+           {
+             status_code: result.code,
+             destination_file: nil
+           }
+         )
+       end
     end
   end
 end
